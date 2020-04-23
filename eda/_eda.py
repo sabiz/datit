@@ -5,42 +5,30 @@ import numpy as np
 import pandas as pd
 import re
 
-from datit.visualize import _visualize as _visu
-from datit.visualize._visualize import _palette as plt
+from ._graph import value_count
+from ._graph import pareto
+from ._graph import histgram
+from ._graph import density_plot
+from ._graph import density_2d_plot
+from ._graph import box_plot
+from ._graph import violin_plot
+from ._graph import scatter_plot
 
-__all__ = ['summary', 'value_count', 'pareto']
-
-def pareto(data: pd.Series):
-    """
-    Plot pareto chart
-    """
-    if data.dtype != 'object':
-        return
-    fig, ax = _visu._create_fig()
-    counts = data.value_counts()
-    ax.bar(counts.index, counts.values, label='count' ,color=plt[0])
-    ax.set(title=f'Pareto: {counts.name}')
-    ax2 = ax.twinx()
-    ratio = counts / counts.sum()
-    ax2.plot(ratio.index, ratio.cumsum(), label='ratio', c=plt[1])
-    ax2.set(ylim=(0, 1.05))
-    h1, l1 = ax.get_legend_handles_labels()
-    h2, l2 = ax2.get_legend_handles_labels()
-    _visu.plt.tight_layout()
-    _visu.plt.legend(h1+h2, l1+l2)
-    _visu.plt.plot()
+__all__ = (['summary', 'simple_report'] +
+           ['value_count', 'pareto', 'histgram',
+            'density_plot', 'density_2d_plot', 'box_plot',
+            'violin_plot', 'scatter_plot'])
 
 
-def value_count(data: pd.Series):
-    """
-    Plot value counts
-    """
-    fig, ax = _visu._create_fig()
-    counts = data.value_counts()
-    ax.bar(counts.index, counts.values, color=plt[0])
-    ax.set(title=f'Value Count: {counts.name}')
-    _visu.plt.tight_layout()
-    _visu.plt.plot()
+def simple_report(data: pd.DataFrame):
+    from pandas_profiling import ProfileReport
+    import sys
+    inJupyter = sys.argv[-1].endswith('json')
+    report = ProfileReport(data, title='Report', html={'style': {'full_width': True}})
+    if inJupyter:
+        return report.to_notebook_iframe()
+    else:
+        return report.to_file(output_file='simple_report.html')
 
 
 def summary(data: pd.DataFrame) -> pd.DataFrame:
@@ -65,7 +53,7 @@ def summary(data: pd.DataFrame) -> pd.DataFrame:
                 if data_type == 'object' else '-')
         if data_type == 'object':
 
-            value_counts=data[c].value_counts()
+            value_counts = data[c].value_counts()
             idx = len(value_counts) -1
             while(re.match(pat, str(value_counts.index[idx])) and idx > 0):
                 idx -= 1
@@ -76,7 +64,7 @@ def summary(data: pd.DataFrame) -> pd.DataFrame:
             avg_data.append('-')
             med_data.append('-')
             std_data.append('-')
-            idx = len(value_counts) -1
+            idx = len(value_counts) - 1
             while(not re.match(pat, str(value_counts.index[idx])) and idx > -1):
                 idx -= 1
             if idx == -1:

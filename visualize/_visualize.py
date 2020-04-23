@@ -13,5 +13,11 @@ _palette = [
         '#E16B8C', '#F05E1C', '#FFC408', '#5DAC81', '#70649A',
         ]
 
+
 def _create_fig(**kwargs) -> Plots:
     return plt.subplots(**kwargs)
+
+
+def _plot():
+    plt.tight_layout()
+    plt.plot()
