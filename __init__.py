@@ -1,5 +1,6 @@
 """
  init
 """
-import datit.data
-import datit.figure
+
+from . import data
+from . import eda
