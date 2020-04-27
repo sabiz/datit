@@ -13,11 +13,31 @@ from ._graph import density_2d_plot
 from ._graph import box_plot
 from ._graph import violin_plot
 from ._graph import scatter_plot
+from ._graph import check_normal_dist
 
-__all__ = (['summary', 'simple_report'] +
+__all__ = (['summary', 'simple_report', 'corr'] +
            ['value_count', 'pareto', 'histgram',
             'density_plot', 'density_2d_plot', 'box_plot',
-            'violin_plot', 'scatter_plot'])
+            'violin_plot', 'scatter_plot', 'check_normal_dist'])
+
+
+def corr(data: pd.DataFrame, target: str):
+    """
+    !! retuen target mean, if dtype is object
+    """
+    results = {"name": [], "value": []}
+    for c in data.columns:
+        if c == target:
+            continue
+        if data[c].dtype == "object":
+            tmp = data.groupby(c, as_index=False).mean()[target].to_dict()
+            for t in tmp:
+                results["name"].append(f"{c} ({t})")
+                results["value"].append(tmp[t])
+            continue
+        results["name"].append(c)
+        results["value"].append(np.corrcoef(data[c], data[target])[0, 1])
+    return pd.DataFrame(results)
 
 
 def simple_report(data: pd.DataFrame):
