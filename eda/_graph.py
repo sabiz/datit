@@ -76,6 +76,9 @@ def density_plot(data: pd.Series, band_width: Optional[float] = None):
 
 
 def histgram(data: pd.Series, bins: Optional[int] = None):
+    if data.dtype == 'object':
+        print("Ignore non number type")
+        return
     bin_number = bins
     if bin_number is None:
         bin_number = int(1 + np.log2(len(data)))

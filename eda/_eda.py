@@ -30,7 +30,7 @@ def corr(data: pd.DataFrame, target: str):
         if c == target:
             continue
         if data[c].dtype == "object":
-            tmp = data.groupby(c, as_index=False).mean()[target].to_dict()
+            tmp = data.groupby(c).mean()[target].to_dict()
             for t in tmp:
                 results["name"].append(f"{c} ({t})")
                 results["value"].append(tmp[t])
