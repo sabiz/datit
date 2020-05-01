@@ -1,5 +1,5 @@
 """
-Evaluation
+Metrics
 """
 
 import numpy as np
@@ -8,7 +8,27 @@ import pandas as pd
 from datit.visualize import _visualize as _visu
 from datit.visualize._visualize import _palette as palette
 
-__all__ = ['capcurve']
+__all__ = ['capcurve', 'roccurve']
+
+
+def roccurve(y, y_prob):
+    from sklearn.metrics import roc_auc_score
+    from sklearn.metrics import roc_curve
+    auc = roc_auc_score(y, y_prob)
+    fpr, tpr, thresholds = roc_curve(y, y_prob)
+    fig, ax = _visu._create_fig()
+    ax.plot([0, 1e-10, 1], [0, 1, 1], color=palette[0], label='Perfect')
+    ax.plot(fpr, tpr, color=palette[1], label='Model')
+    ax.plot([0, 1], [0, 1], color=palette[2], label='Random')
+    ax_params = {
+            "title": f"ROC curve (AUC:{auc:.04})",
+            "xlabel": "FP rate",
+            "ylabel": "TP rate",
+            }
+    ax.set(**ax_params)
+    ax.legend()
+    _visu._plot()
+    pass
 
 
 def capcurve(y, y_prob):
@@ -31,7 +51,7 @@ def capcurve(y, y_prob):
 
     fig, ax = _visu._create_fig()
     ax.plot(ideal[0, :], ideal[1, :],
-            color=palette[0], label='Ideal model')
+            color=palette[0], label='Perfect')
     ax.plot(y_cap_df.x_rate, y_cap_df.y_rate,
             color=palette[1], label='Model')
     ax.plot(y_cap_df.x_rate, y_cap_df.x_rate,
