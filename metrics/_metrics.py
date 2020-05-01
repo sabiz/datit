@@ -19,7 +19,8 @@ def roccurve(y, y_prob):
     fig, ax = _visu._create_fig()
     ax.plot([0, 1e-10, 1], [0, 1, 1], color=palette[0], label='Perfect')
     ax.plot(fpr, tpr, color=palette[1], label='Model')
-    ax.plot([0, 1], [0, 1], color=palette[2], label='Random')
+    ax.plot([0, 1], [0, 1],
+            linestyle='dashed', color=palette[2], label='Random')
     ax_params = {
             "title": f"ROC curve (AUC:{auc:.04})",
             "xlabel": "FP rate",
