@@ -4,11 +4,13 @@ Metrics
 
 import numpy as np
 import pandas as pd
+import time
 
+from contextlib import contextmanager
 from datit.visualize import _visualize as _visu
 from datit.visualize._visualize import _palette as palette
 
-__all__ = ['capcurve', 'roccurve']
+__all__ = ['capcurve', 'roccurve', 'timer']
 
 
 def roccurve(y, y_prob):
@@ -71,3 +73,15 @@ def capcurve(y, y_prob):
     ax.set(**ax_params)
     ax.legend()
     _visu._plot()
+
+
+@contextmanager
+def timer(name: str):
+    """
+    Time it!
+    from https://www.kaggle.com/naka2ka/stack-480-speedup-groupkfold-with-no-dict
+    """
+    t0 = time.time()
+    yield
+    msg = f"[{name}] done in {time.time()-t0:.0f} s"
+    print(msg)
