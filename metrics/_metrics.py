@@ -12,6 +12,9 @@ __all__ = ['capcurve', 'roccurve']
 
 
 def roccurve(y, y_prob):
+    """
+    plot ROC
+    """
     from sklearn.metrics import roc_auc_score
     from sklearn.metrics import roc_curve
     auc = roc_auc_score(y, y_prob)
@@ -33,6 +36,9 @@ def roccurve(y, y_prob):
 
 
 def capcurve(y, y_prob):
+    """
+    plot CAP
+    """
     from scipy import integrate
     num_sum = np.sum(y)
     num_count = len(y)

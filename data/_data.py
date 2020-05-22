@@ -7,9 +7,11 @@ import pandas as pd
 
 __all__ = ['reduce_mem_usage']
 
+
 def reduce_mem_usage(df:pd.DataFrame, verbose=True) -> pd.DataFrame:
     """
     Reduce memory usage, data type optimized approach
+    from https://www.kaggle.com/gemartin/load-data-reduce-memory-usage
     """
     numerics = ['int16', 'int32', 'int64', 'float16', 'float32', 'float64']
     start_mem = df.memory_usage(deep=True).sum() / 1024**2
